@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DetailsActivity"
-
-    android:padding="8dp"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -73,6 +71,7 @@
         android:layout_marginTop="25dp"
         android:textSize="25dp"
         android:textStyle="bold"
+        android:layout_marginStart="8dp"
         />
 
     <TextView
@@ -82,5 +81,6 @@
         android:text="Описание"
         android:textSize="20dp"
         android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
          />
 </LinearLayout>

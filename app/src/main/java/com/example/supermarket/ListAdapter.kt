@@ -27,7 +27,7 @@ class ListAdapter (context: Context, products: MutableList<Product>):
 
         binding.itemImageProductImageViewIV.setImageURI(Uri.parse(product?.images))
         binding.itemListViewNameLV.text = product?.name
-        binding.itemListViewPriceLV.text = product?.price
+        binding.itemListViewPriceLV.text = "${product?.price} руб."
 
         return binding.root
     }

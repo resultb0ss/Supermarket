@@ -37,7 +37,7 @@ class DetailsActivity : AppCompatActivity() {
         val image: Uri? = Uri.parse(product.images)
 
         binding.detailsActivityNameProductTV.text = name
-        binding.detailsActivityPriceProductTV.text = price
+        binding.detailsActivityPriceProductTV.text = "${product?.price} руб."
         binding.detailsActivityImageProductIV.setImageURI(image)
         binding.detailsActivityDescriptionProductTV.text = description
 
