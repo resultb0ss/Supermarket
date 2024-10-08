@@ -56,14 +56,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:includeFontPadding="false"
                 android:hint="Название"/>
 
             <EditText
                 android:id="@+id/secondActivityPriceEditTextET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:includeFontPadding="false"
                 android:hint="Цена"/>
+
+            <EditText
+                android:id="@+id/secondActivityDescriptionEditTextET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:hint="Краткое описание"/>
 
         </LinearLayout>
 

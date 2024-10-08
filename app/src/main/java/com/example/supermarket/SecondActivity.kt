@@ -1,24 +1,23 @@
 package com.example.supermarket
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.widget.ArrayAdapter
-import androidx.activity.enableEdgeToEdge
+import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.supermarket.databinding.ActivitySecondBinding
-import java.io.IOException
 
-class SecondActivity : AppCompatActivity() {
+class SecondActivity : AppCompatActivity(), Removable, Updatable{
 
     private lateinit var binding: ActivitySecondBinding
     private val products: MutableList<Product> = mutableListOf()
-    var bitmap: Bitmap? = null
+
+    var listAdapter: ListAdapter? = null
+    var photoUri: Uri? = null
     val GALLERY_REQUEST = 302
+    var item: Int? = null
+    var product: Product? = null
+    var check = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,21 +26,37 @@ class SecondActivity : AppCompatActivity() {
         binding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val listAdapter = ListAdapter(this@SecondActivity, products)
+        listAdapter = ListAdapter(this@SecondActivity, products)
         binding.secondActivityMainListVewLV.adapter = listAdapter
 
 
         binding.secondActivityAddButtonBTN.setOnClickListener{
             val name = binding.secondActivityNameEditTextET.text.toString()
             val price = binding.secondActivityPriceEditTextET.text.toString()
-            val image = bitmap
-            val product = Product(name,price,image)
-            products.add(product)
-            listAdapter.notifyDataSetChanged()
+            val image = photoUri.toString()
+            val description = binding.secondActivityDescriptionEditTextET.text.toString()
+            val product = Product(name,price,description,image)
+            products.add(product!!)
+            photoUri = null
+            //Clear edit field не дает сделать
+            listAdapter?.notifyDataSetChanged()
+
 
             binding.secondActivityNameEditTextET.text.clear()
             binding.secondActivityPriceEditTextET.text.clear()
+            binding.secondActivityDescriptionEditTextET.text.clear()
         }
+
+        binding.secondActivityMainListVewLV.onItemClickListener =
+            AdapterView.OnItemClickListener{ parent, view, position, id ->
+                val product = listAdapter!!.getItem(position)
+                item = position
+                val dialog = MyAlertDialog()
+                val args = Bundle()
+                args.putSerializable("product", product)
+                dialog.arguments = args
+                dialog.show(supportFragmentManager,"custom")
+            }
 
         binding.secondActivityImageProductImageViewIV.setOnClickListener{
             val photoPickerIntent = Intent(Intent.ACTION_PICK)
@@ -60,15 +75,23 @@ class SecondActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode){
             GALLERY_REQUEST -> if(resultCode == RESULT_OK){
-                val selectedImage: Uri? = data?.data
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage)
-                } catch (e: IOException){
-                    e.printStackTrace()
-                }
-                binding.secondActivityImageProductImageViewIV.setImageURI(selectedImage)
+                photoUri = data?.data
+                binding.secondActivityImageProductImageViewIV.setImageURI(photoUri)
             }
 
         }
+    }
+
+    override fun remove(product: Product) {
+        listAdapter?.remove(product)
+    }
+
+    override fun update(product: Product) {
+        val intent = Intent(this, DetailsActivity::class.java)
+        intent.putExtra("product",product)
+        intent.putExtra("products", this.products as ArrayList<Product>)
+        intent.putExtra("position", item)
+        intent.putExtra("check",check)
+        startActivity(intent)
     }
 }

@@ -2,6 +2,7 @@ package com.example.supermarket
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,7 @@ class ListAdapter (context: Context, products: MutableList<Product>):
         }
 
 
-        binding.itemImageProductImageViewIV.setImageBitmap(product?.images)
+        binding.itemImageProductImageViewIV.setImageURI(Uri.parse(product?.images))
         binding.itemListViewNameLV.text = product?.name
         binding.itemListViewPriceLV.text = product?.price
 
