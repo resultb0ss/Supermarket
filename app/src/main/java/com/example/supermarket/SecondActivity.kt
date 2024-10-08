@@ -4,13 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.supermarket.databinding.ActivitySecondBinding
 
 class SecondActivity : AppCompatActivity(), Removable, Updatable{
 
     private lateinit var binding: ActivitySecondBinding
-    private val products: MutableList<Product> = mutableListOf()
+    private var products: MutableList<Product> = mutableListOf()
 
     var listAdapter: ListAdapter? = null
     var photoUri: Uri? = null
@@ -37,14 +38,9 @@ class SecondActivity : AppCompatActivity(), Removable, Updatable{
             val description = binding.secondActivityDescriptionEditTextET.text.toString()
             val product = Product(name,price,description,image)
             products.add(product!!)
-            photoUri = null
-            //Clear edit field не дает сделать
             listAdapter?.notifyDataSetChanged()
-
-
-            binding.secondActivityNameEditTextET.text.clear()
-            binding.secondActivityPriceEditTextET.text.clear()
-            binding.secondActivityDescriptionEditTextET.text.clear()
+            clearEditFields()
+            photoUri = null
         }
 
         binding.secondActivityMainListVewLV.onItemClickListener =
@@ -65,10 +61,35 @@ class SecondActivity : AppCompatActivity(), Removable, Updatable{
         }
 
         binding.secondActivityExitButtonBTN.setOnClickListener {
+            Toast.makeText(this,"Программа завершена", Toast.LENGTH_LONG).show()
             this.finishAffinity()
         }
 
+        binding.secondActivityBackButtonBTN.setOnClickListener{
+            val intent = Intent(this,MainActivity::class.java)
+            startActivity(intent)
+        }
 
+
+    }
+
+    private fun clearEditFields() {
+        binding.secondActivityNameEditTextET.text.clear()
+        binding.secondActivityPriceEditTextET.text.clear()
+        binding.secondActivityDescriptionEditTextET.text.clear()
+        binding.secondActivityImageProductImageViewIV.setImageResource(R.drawable.baseline_person_24)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        check = intent.extras?.getBoolean("newCheck") ?: true
+        if (!check) {
+            products = intent.getSerializableExtra("list") as MutableList<Product>
+            listAdapter = ListAdapter(this, products)
+            check = true
+
+        }
+        binding.secondActivityMainListVewLV.adapter = listAdapter
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
