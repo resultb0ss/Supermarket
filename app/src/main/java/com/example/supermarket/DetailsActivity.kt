@@ -16,6 +16,7 @@ class DetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailsBinding
     private val GALLERY_REQUEST = 200
+    private var product: Product? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,16 +26,16 @@ class DetailsActivity : AppCompatActivity() {
 
 
         //Set detail info about product
-        val product: Product = intent.extras?.getSerializable("product") as Product
+        product = intent.extras?.getSerializable("product") as Product
         val products = intent.getSerializableExtra("products")
         val item = intent.extras?.getInt("position")
         var check = intent.extras?.getBoolean("check")
 
 
-        val name = product.name
-        val price = product.price
-        val description = product.description
-        val image: Uri? = Uri.parse(product.images)
+        val name = product?.name
+        val price = product?.price
+        val description = product?.description
+        val image: Uri? = Uri.parse(product?.images)
 
         binding.detailsActivityNameProductTV.text = name
         binding.detailsActivityPriceProductTV.text = "${product?.price} руб."
@@ -54,7 +55,7 @@ class DetailsActivity : AppCompatActivity() {
                 binding.detailsActivityNameProductTV.text.toString(),
                 binding.detailsActivityPriceProductTV.text.toString(),
                 binding.detailsActivityDescriptionProductTV.text.toString(),
-                product.images// ?? Вот тут вопрос? понимаю что старое изображение отправляется
+                product?.images// ?? Вот тут вопрос? понимаю что старое изображение отправляется
             )
 
             val list: MutableList<Product> = products as MutableList<Product>
@@ -85,6 +86,7 @@ class DetailsActivity : AppCompatActivity() {
             GALLERY_REQUEST -> if(resultCode == RESULT_OK){
                 val photoUri = data?.data
                 binding.detailsActivityImageProductIV.setImageURI(photoUri)
+                product?.images = photoUri.toString()
             }
 
         }

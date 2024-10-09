@@ -24,7 +24,6 @@ class ListAdapter (context: Context, products: MutableList<Product>):
             ItemListBinding.bind(convertView)
         }
 
-
         binding.itemImageProductImageViewIV.setImageURI(Uri.parse(product?.images))
         binding.itemListViewNameLV.text = product?.name
         binding.itemListViewPriceLV.text = "${product?.price} руб."
